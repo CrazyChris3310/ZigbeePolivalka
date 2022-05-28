@@ -1,6 +1,6 @@
 package com.example.zigbeepolivalka.domain;
 
-public class MoistureMode implements WateringMode {
+public class MoistureMode extends AbstractMode {
 
   private String moistureLevel;
 
@@ -18,4 +18,5 @@ public class MoistureMode implements WateringMode {
   public void setModeParameter(String param) {
     this.moistureLevel = param;
   }
+
 }
