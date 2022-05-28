@@ -12,4 +12,8 @@ public interface WateringMode {
 
   void setDuration(Integer duration);
 
+  String getDuration();
+
+  void setDuration(String duration);
+
 }
