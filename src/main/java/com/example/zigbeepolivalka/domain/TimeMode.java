@@ -1,6 +1,6 @@
 package com.example.zigbeepolivalka.domain;
 
-public class TimeMode implements WateringMode {
+public class TimeMode extends AbstractMode {
 
   private String wateringTime;
 

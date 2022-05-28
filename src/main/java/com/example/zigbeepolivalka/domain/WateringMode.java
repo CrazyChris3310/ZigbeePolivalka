@@ -8,4 +8,8 @@ public interface WateringMode {
 
   void setModeParameter(String param);
 
+  String getDuration();
+
+  void setDuration(String duration);
+
 }
