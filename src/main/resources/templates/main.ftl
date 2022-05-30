@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as com>
+<#import "parts/common.ftl" as com>
 
 <@com.page>
     <div>Polivalka</div>
