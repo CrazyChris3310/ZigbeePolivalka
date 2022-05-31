@@ -2,13 +2,17 @@ package com.example.zigbeepolivalka.controllers;
 
 import com.example.zigbeepolivalka.domain.Flower;
 import com.example.zigbeepolivalka.domain.MoistureMode;
+import com.example.zigbeepolivalka.domain.TimeMode;
 import com.example.zigbeepolivalka.exceptions.NoSuchFlowerException;
 import com.example.zigbeepolivalka.services.ZigBeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 
 @Controller
@@ -20,9 +24,11 @@ public class RequestController {
     @GetMapping("/")
     public String start(Model model){
         //TODO Убрать строки добавления цветков
-        Flower rose = new Flower("Rose", new MoistureMode());
+        MoistureMode mode = new MoistureMode();
+        mode.setDuration(50);
+        Flower rose = new Flower("Rose", mode);
         rose.setId(1);
-        Flower sunflower = new Flower("SunFlower", new MoistureMode());
+        Flower sunflower = new Flower("SunFlower", new TimeMode());
         sunflower.setId(2);
         Flower butterCup = new Flower("ButterCup", new MoistureMode());
         butterCup.setId(3);
@@ -39,12 +45,45 @@ public class RequestController {
     }
 
     @GetMapping("/flowers/{id}")
-    public String currentFlower(Model model, @PathVariable int id){
+    public String getCurrentFlower(Model model, @PathVariable int id){
         try {
             model.addAttribute("flower", service.getFlowerById(id));
             return "/parts/settings";
         } catch (NoSuchFlowerException exception) {
             return "/parts/error";
         }
+    }
+
+    @PostMapping("/flowers/{id}")
+    public String updateCurrentFlower(@RequestParam String body, Model model, @PathVariable int id){
+        Map<String, String> parsedBody = bodyToMap(body);
+        System.out.println(body);
+        try {
+            if (Objects.equals(parsedBody.get("watering_mode"), "1")) {
+                MoistureMode mode = new MoistureMode();
+                mode.setModeParameter(Integer.parseInt(parsedBody.get("levels")));
+                service.updateFlower(id, new Flower(parsedBody.get("name"), mode));
+            } else {
+                TimeMode mode = new TimeMode();
+                int time = Integer.parseInt(parsedBody.get("days")) * 3600 * 24 + Integer.parseInt(parsedBody.get("hours")) * 3600 + Integer.parseInt(parsedBody.get("min")) * 60;
+                mode.setModeParameter(time);
+                service.updateFlower(id, new Flower(parsedBody.get("name"), mode));
+            }
+        } catch (NoSuchFlowerException exception){
+            return "/parts/error";
+        }
+        return flowerList(model);
+    }
+
+    public Map<String, String> bodyToMap (String body) {
+        Map<String, String> result = new HashMap<>();
+        String[] values = body.split("&");
+        for (String value : values) {
+            String[] pair = value.split("=");
+            if (pair.length == 2) {
+                result.put(pair[0], pair[1]);
+            }
+        }
+        return result;
     }
 }

@@ -2,15 +2,15 @@ package com.example.zigbeepolivalka.domain;
 
 public abstract class AbstractMode implements WateringMode {
 
-  private String duration;
+  private Integer duration;
 
   @Override
-  public String getDuration() {
+  public Integer getDuration() {
     return duration;
   }
 
   @Override
-  public void setDuration(String duration) {
+  public void setDuration(Integer duration) {
     this.duration = duration;
   }
 

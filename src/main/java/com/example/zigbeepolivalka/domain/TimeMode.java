@@ -2,7 +2,7 @@ package com.example.zigbeepolivalka.domain;
 
 public class TimeMode extends AbstractMode {
 
-  private String wateringTime;
+  private Integer wateringTime;
 
   @Override
   public int getModeId() {
@@ -10,12 +10,12 @@ public class TimeMode extends AbstractMode {
   }
 
   @Override
-  public String getModeParameter() {
+  public Integer getModeParameter() {
     return wateringTime;
   }
 
   @Override
-  public void setModeParameter(String param) {
+  public void setModeParameter(Integer param) {
     this.wateringTime = param;
   }
 }

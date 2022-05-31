@@ -2,7 +2,7 @@ package com.example.zigbeepolivalka.domain;
 
 public class MoistureMode extends AbstractMode {
 
-  private String moistureLevel;
+  private Integer moistureLevel;
 
   @Override
   public int getModeId() {
@@ -10,12 +10,12 @@ public class MoistureMode extends AbstractMode {
   }
 
   @Override
-  public String getModeParameter() {
+  public Integer getModeParameter() {
     return moistureLevel;
   }
 
   @Override
-  public void setModeParameter(String param) {
+  public void setModeParameter(Integer param) {
     this.moistureLevel = param;
   }
 

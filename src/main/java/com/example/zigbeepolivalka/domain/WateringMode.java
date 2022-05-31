@@ -4,12 +4,12 @@ public interface WateringMode {
 
   int getModeId();
 
-  String getModeParameter();
+  Integer getModeParameter();
 
-  void setModeParameter(String param);
+  void setModeParameter(Integer param);
 
-  String getDuration();
+  Integer getDuration();
 
-  void setDuration(String duration);
+  void setDuration(Integer duration);
 
 }

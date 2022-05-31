@@ -6,7 +6,7 @@
     <form action = "/flowers/${flower.getId()}" method="post">
         <label for="name">
             Name
-            <input id="name" value="${flower.getName()}" maxlength="255">
+            <input placeholder="Введите имя" id="name" name="name" value="${flower.getName()}" maxlength="255" required>
         </label>
         <div>
             Moisture
@@ -31,37 +31,45 @@
             }
         </script>
         <#if flower.getWateringMode().getModeId() == 1>
-            <label for="moisture">
-                Watering
-                <input id="mode1" type="radio" name="moisture" value="1" checked onclick="check()">
+            <label for="watering_mode">
+                Moisture
+                <input id="mode1" type="radio" name="watering_mode" value="1" checked onclick="check()">
                 Time
-                <input id="mode2" type="radio" name="moisture" value="2" onclick="check()">
+                <input id="mode2" type="radio" name="watering_mode" value="2" onclick="check()">
             </label>
             <div id="moisture_mode">
                 <label for="levels">
                     Choose moisture level
-                    <select required name="levels">
+                    <select required id="level" name="levels">
                         <#list 0..9 as i>
-                            <option>${i*10}</option>
+                            <#if flower.getWateringMode().getDuration() == i*10>
+                                <option selected>${i*10}</option>
+                            <#else>
+                                <option>${i*10}</option>
+                            </#if>
                         </#list>
                     </select>
                 </label>
             </div>
             <div id="time_mode" style="visibility : hidden; display: none">
-                <label for="time">
-                    <select required name="time">
+                <label for="days">
+                    <select required id="days" name="days">
                         <#list 0..30 as days>
                             <option>${days}</option>
                         </#list>
                     </select>
                     Days
-                    <select required name="time">
+                </label>
+                <label for="hours">
+                    <select required id="hours" name="hours">
                         <#list 0..24 as hours>
                             <option>${hours}</option>
                         </#list>
                     </select>
                     Hours
-                    <select required name="time">
+                </label>
+                <label for="min">
+                    <select required id="min" name="min">
                         <#list 0..60 as min>
                             <option>${min}</option>
                         </#list>
@@ -70,16 +78,16 @@
                 </label>
             </div>
         <#else>
-            <label for="moisture">
-                Watering
-                <input id="mode1" type="radio" name="moisture" value="1" onclick="check()">
+            <label for="watering_mode">
+                Moisture
+                <input id="mode1" type="radio" name="watering_mode" value="1" onclick="check()">
                 Time
-                <input id="mode2" type="radio" name="moisture" value="2" checked onclick="check()">
+                <input id="mode2" type="radio" name="watering_mode" value="2" checked onclick="check()">
             </label>
             <div id="moisture_mode" style="visibility : hidden; display: none">
                 <label for="levels">
                     Choose moisture level
-                    <select required name="levels">
+                    <select required id="level" name="levels">
                         <#list 0..9 as i>
                             <option>${i*10}</option>
                         </#list>
@@ -88,19 +96,19 @@
             </div>
             <div id="time_mode">
                 <label for="time">
-                    <select required name="time">
+                    <select required id="days" name="time">
                         <#list 0..30 as days>
                             <option>${days}</option>
                         </#list>
                     </select>
                     Days
-                    <select required name="time">
+                    <select required id="hours" name="time">
                         <#list 0..24 as hours>
                             <option>${hours}</option>
                         </#list>
                     </select>
                     Hours
-                    <select required name="time">
+                    <select required id="min" name="time">
                         <#list 0..60 as min>
                             <option>${min}</option>
                         </#list>

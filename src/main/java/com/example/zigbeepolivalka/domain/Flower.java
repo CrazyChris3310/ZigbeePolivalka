@@ -4,10 +4,10 @@ public class Flower {
 
   private int id;
   private String name;
-  private WateringMode wateringMode;
+  private AbstractMode wateringMode;
   private int currentMoistureLevel;
 
-  public Flower(String name, WateringMode wateringMode) {
+  public Flower(String name, AbstractMode wateringMode) {
     this.name = name;
     this.wateringMode = wateringMode;
   }
@@ -28,11 +28,11 @@ public class Flower {
     this.name = name;
   }
 
-  public WateringMode getWateringMode() {
+  public AbstractMode getWateringMode() {
     return wateringMode;
   }
 
-  public void setWateringMode(WateringMode wateringMode) {
+  public void setWateringMode(AbstractMode wateringMode) {
     this.wateringMode = wateringMode;
   }
 
@@ -42,5 +42,16 @@ public class Flower {
 
   public void setCurrentMoistureLevel(int currentMoistureLevel) {
     this.currentMoistureLevel = currentMoistureLevel;
+  }
+
+
+  @Override
+  public String toString() {
+    return "Flower{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", wateringMode=" + wateringMode +
+            ", currentMoistureLevel=" + currentMoistureLevel +
+            '}';
   }
 }
