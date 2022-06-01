@@ -1,23 +1,37 @@
 package com.example.zigbeepolivalka.domain;
 
+import com.digi.xbee.api.RemoteXBeeDevice;
+
+import java.util.Objects;
+
 public class Flower {
 
-  private int id;
+  private String id;
   private String name;
   private AbstractMode wateringMode;
   private int currentMoistureLevel;
+  private RemoteXBeeDevice remoteXBeeDevice;
+  private boolean isSelected;
 
   public Flower(String name, AbstractMode wateringMode) {
     this.name = name;
     this.wateringMode = wateringMode;
   }
 
-  public int getId() {
-    return id;
+  public Flower(String id, String name, WateringMode wateringMode) {
+    this.id = id;
+    this.name = name;
+    this.wateringMode = wateringMode;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public Flower(RemoteXBeeDevice device) {
+    this.remoteXBeeDevice = device;
+    this.id = remoteXBeeDevice.get64BitAddress().toString();
+    this.isSelected = false;
+  }
+
+  public String getId() {
+    return id;
   }
 
   public String getName() {
@@ -42,6 +56,27 @@ public class Flower {
 
   public void setCurrentMoistureLevel(int currentMoistureLevel) {
     this.currentMoistureLevel = currentMoistureLevel;
+  }
+
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean selected) {
+    isSelected = selected;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) { return true; }
+    if (o == null || getClass() != o.getClass()) { return false; }
+    Flower flower = (Flower) o;
+    return Objects.equals(id, flower.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 
 
