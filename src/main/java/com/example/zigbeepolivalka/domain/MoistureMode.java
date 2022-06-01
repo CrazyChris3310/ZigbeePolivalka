@@ -4,7 +4,7 @@ public class MoistureMode extends AbstractMode {
 
   private Integer moistureLevel;
 
-  public MoistureMode(String moistureLevel) {
+  public MoistureMode(Integer moistureLevel) {
     this.moistureLevel = moistureLevel;
   }
 

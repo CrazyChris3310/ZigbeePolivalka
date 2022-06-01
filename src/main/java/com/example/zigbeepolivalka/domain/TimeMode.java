@@ -4,7 +4,7 @@ public class TimeMode extends AbstractMode {
 
   private Integer wateringTime;
 
-  public TimeMode(String wateringTime) {
+  public TimeMode(Integer wateringTime) {
     this.wateringTime = wateringTime;
   }
 
