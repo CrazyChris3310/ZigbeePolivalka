@@ -1,4 +1,4 @@
-package com.example.zigbeepolivalka.domain;
+package com.example.zigbeepolivalka.services;
 
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeDevice;
@@ -25,6 +25,12 @@ public class XbeeConnector {
 
   public XbeeConnector() {
     localDevice = new XBeeDevice(PORT, BAUD_RATE);
+    try {
+      localDevice.open();
+      localDevice.addDataListener(new DataReceiverListener());
+    } catch (XBeeException e) {
+      System.out.println("Error opening connection. " + e.getMessage());
+    }
   }
 
   public List<RemoteXBeeDevice> discoverNetwork() throws XBeeException {
@@ -38,10 +44,6 @@ public class XbeeConnector {
     network = net.getDevices();
 
     return network;
-  }
-
-  public Object receiveData() {
-    return new Object();
   }
 
   public void sendData(String id) {

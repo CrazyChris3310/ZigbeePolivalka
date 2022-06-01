@@ -18,7 +18,7 @@ public class Flower {
     this.wateringMode = wateringMode;
   }
 
-  public Flower(String id, String name, WateringMode wateringMode) {
+  public Flower(String id, String name, AbstractMode wateringMode) {
     this.id = id;
     this.name = name;
     this.wateringMode = wateringMode;

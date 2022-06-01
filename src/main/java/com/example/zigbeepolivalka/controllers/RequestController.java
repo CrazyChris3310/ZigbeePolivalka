@@ -24,28 +24,28 @@ public class RequestController {
     @GetMapping("/")
     public String start(Model model){
         //TODO Убрать строки добавления цветков
-        MoistureMode mode = new MoistureMode();
-        mode.setDuration(50);
-        Flower rose = new Flower("Rose", mode);
-        rose.setId(1);
-        Flower sunflower = new Flower("SunFlower", new TimeMode());
-        sunflower.setId(2);
-        Flower butterCup = new Flower("ButterCup", new MoistureMode());
-        butterCup.setId(3);
-        service.addFlower(rose);
-        service.addFlower(sunflower);
-        service.addFlower(butterCup);
+//        MoistureMode mode = new MoistureMode();
+//        mode.setDuration(50);
+//        Flower rose = new Flower("Rose", mode);
+//        rose.setId(1);
+//        Flower sunflower = new Flower("SunFlower", new TimeMode());
+//        sunflower.setId(2);
+//        Flower butterCup = new Flower("ButterCup", new MoistureMode());
+//        butterCup.setId(3);
+//        service.addFlower(rose);
+//        service.addFlower(sunflower);
+//        service.addFlower(butterCup);
         return "start";
     }
 
     @GetMapping("/flowers")
     public String flowerList(Model model){
-        model.addAttribute("flowerList", service.getConnectedDevices());
+        model.addAttribute("flowerList", service.getFlowers());
         return "main";
     }
 
     @GetMapping("/flowers/{id}")
-    public String getCurrentFlower(Model model, @PathVariable int id){
+    public String getCurrentFlower(Model model, @PathVariable String id){
         try {
             model.addAttribute("flower", service.getFlowerById(id));
             return "/parts/settings";
@@ -55,7 +55,7 @@ public class RequestController {
     }
 
     @PostMapping("/flowers/{id}")
-    public String updateCurrentFlower(@RequestParam String body, Model model, @PathVariable int id){
+    public String updateCurrentFlower(@RequestParam String body, Model model, @PathVariable String id){
         Map<String, String> parsedBody = bodyToMap(body);
         System.out.println(body);
         try {

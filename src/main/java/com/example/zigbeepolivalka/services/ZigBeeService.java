@@ -3,7 +3,6 @@ package com.example.zigbeepolivalka.services;
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.example.zigbeepolivalka.domain.Flower;
-import com.example.zigbeepolivalka.domain.XbeeConnector;
 import com.example.zigbeepolivalka.exceptions.NoSuchFlowerException;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +25,6 @@ public class ZigBeeService {
     return flowers.stream()
             .filter(Flower::isSelected)
             .collect(Collectors.toList());
-  }
-
-  public Flower getFlowerByName(String name) throws NoSuchFlowerException {
-    return flowers.stream()
-            .filter(flower -> flower.getName().equals(name))
-            .findAny()
-            .orElseThrow(NoSuchFlowerException::new);
   }
 
   public Flower getFlowerById(String id) throws NoSuchFlowerException {
