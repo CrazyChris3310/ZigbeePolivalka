@@ -4,6 +4,13 @@ public class TimeMode extends AbstractMode {
 
   private String wateringTime;
 
+  public TimeMode(String wateringTime) {
+    this.wateringTime = wateringTime;
+  }
+
+  public TimeMode() {
+  }
+
   @Override
   public int getModeId() {
     return 2;

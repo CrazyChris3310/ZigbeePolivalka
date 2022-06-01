@@ -1,19 +1,31 @@
 package com.example.zigbeepolivalka.services;
 
+import com.digi.xbee.api.RemoteXBeeDevice;
+import com.digi.xbee.api.exceptions.XBeeException;
 import com.example.zigbeepolivalka.domain.Flower;
+import com.example.zigbeepolivalka.domain.XbeeConnector;
 import com.example.zigbeepolivalka.exceptions.NoSuchFlowerException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ZigBeeService {
 
-  List<Flower> flowers = new ArrayList<>();
+  private final XbeeConnector connector;
 
-  public List<Flower> getConnectedDevices() {
-    return flowers;
+  private List<Flower> flowers = new ArrayList<>();
+
+  public ZigBeeService(XbeeConnector connector) {
+    this.connector = connector;
+  }
+
+  public List<Flower> getFlowers() {
+    return flowers.stream()
+            .filter(Flower::isSelected)
+            .collect(Collectors.toList());
   }
 
   public Flower getFlowerByName(String name) throws NoSuchFlowerException {
@@ -23,21 +35,16 @@ public class ZigBeeService {
             .orElseThrow(NoSuchFlowerException::new);
   }
 
-  public Flower getFlowerById(int id) throws NoSuchFlowerException {
+  public Flower getFlowerById(String id) throws NoSuchFlowerException {
     return flowers.stream()
-            .filter(flower -> flower.getId() == id)
+            .filter(flower -> flower.getId().equals(id))
             .findAny()
             .orElseThrow(NoSuchFlowerException::new);
   }
 
-  public Flower addFlower(Flower flower) {
-    flowers.add(flower);
-    return flower;
-  }
-
-  public void updateFlower(int id, Flower newFlower) throws NoSuchFlowerException {
+  public void updateFlower(String id, Flower newFlower) throws NoSuchFlowerException {
     Flower oldFlower = flowers.stream()
-                                .filter(flower -> flower.getId() == id)
+                                .filter(flower -> flower.getId().equals(id))
                                 .findAny()
                                 .orElseThrow(NoSuchFlowerException::new);
 
@@ -45,8 +52,27 @@ public class ZigBeeService {
     oldFlower.setWateringMode(newFlower.getWateringMode());
   }
 
-  public void removeFlower(int id) {
-    flowers.removeIf(flower -> flower.getId() == id);
+  public void removeFlower(String id) {
+    flowers.removeIf(flower -> flower.getId().equals(id));
   }
 
+  // TODO: Exception handling must happen here, return status should be discussed
+  public List<Flower> getAvailableFlowers() throws XBeeException {
+    List<RemoteXBeeDevice> devices = connector.discoverNetwork();
+
+    List<Flower> available = devices.stream()
+            .map(Flower::new)
+            .collect(Collectors.toList());
+    available.retainAll(this.flowers);
+    flowers.addAll(available);
+    return available;
+  }
+
+  public void selectFlowers(List<String> ids) {
+    for (Flower flower: flowers) {
+      if (ids.contains(flower.getId())) {
+        flower.setSelected(true);
+      }
+    }
+  }
 }
