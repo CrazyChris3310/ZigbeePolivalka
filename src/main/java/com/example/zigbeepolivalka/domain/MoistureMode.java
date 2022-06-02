@@ -12,7 +12,7 @@ public class MoistureMode extends AbstractMode {
   }
 
   @Override
-  public int getModeId() {
+  public byte getModeId() {
     return 1;
   }
 

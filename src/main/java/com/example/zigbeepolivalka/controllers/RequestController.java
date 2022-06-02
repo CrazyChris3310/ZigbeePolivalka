@@ -1,5 +1,6 @@
 package com.example.zigbeepolivalka.controllers;
 
+import com.digi.xbee.api.exceptions.XBeeException;
 import com.example.zigbeepolivalka.domain.Flower;
 import com.example.zigbeepolivalka.domain.MoistureMode;
 import com.example.zigbeepolivalka.domain.TimeMode;
@@ -65,11 +66,13 @@ public class RequestController {
                 service.updateFlower(id, new Flower(parsedBody.get("name"), mode));
             } else {
                 TimeMode mode = new TimeMode();
-                int time = Integer.parseInt(parsedBody.get("days")) * 3600 * 24 + Integer.parseInt(parsedBody.get("hours")) * 3600 + Integer.parseInt(parsedBody.get("min")) * 60;
+                int time = Integer.parseInt(parsedBody.get("days")) * 3600 * 24
+                           + Integer.parseInt(parsedBody.get("hours")) * 3600
+                           + Integer.parseInt(parsedBody.get("min")) * 60;
                 mode.setModeParameter(time);
                 service.updateFlower(id, new Flower(parsedBody.get("name"), mode));
             }
-        } catch (NoSuchFlowerException exception){
+        } catch (NoSuchFlowerException | XBeeException exception){
             return "/parts/error";
         }
         return flowerList(model);

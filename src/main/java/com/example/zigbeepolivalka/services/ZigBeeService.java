@@ -19,6 +19,7 @@ public class ZigBeeService {
 
   public ZigBeeService(XbeeConnector connector) {
     this.connector = connector;
+    this.connector.setFlowers(flowers);
   }
 
   public List<Flower> getFlowers() {
@@ -34,18 +35,21 @@ public class ZigBeeService {
             .orElseThrow(NoSuchFlowerException::new);
   }
 
-  public void updateFlower(String id, Flower newFlower) throws NoSuchFlowerException {
-    Flower oldFlower = flowers.stream()
-                                .filter(flower -> flower.getId().equals(id))
-                                .findAny()
-                                .orElseThrow(NoSuchFlowerException::new);
+  public void updateFlower(String id, Flower newFlower) throws NoSuchFlowerException,
+          XBeeException {
+    Flower oldFlower = getFlowerById(id);
 
     oldFlower.setName(newFlower.getName());
     oldFlower.setWateringMode(newFlower.getWateringMode());
+    connector.sendData(oldFlower.getRemoteXBeeDevice(),
+                       oldFlower.getWateringMode().getModeId(),
+                       oldFlower.getWateringMode().getModeParameter().shortValue());
   }
 
-  public void removeFlower(String id) {
-    flowers.removeIf(flower -> flower.getId().equals(id));
+  public void removeFlower(String id) throws NoSuchFlowerException, XBeeException {
+    Flower toRemove = getFlowerById(id);
+    flowers.remove(toRemove);
+    connector.sendData(toRemove.getRemoteXBeeDevice(), (byte)3, (short)0);
   }
 
   // TODO: Exception handling must happen here, return status should be discussed
@@ -57,7 +61,9 @@ public class ZigBeeService {
             .collect(Collectors.toList());
     available.retainAll(this.flowers);
     flowers.addAll(available);
-    return available;
+    return flowers.stream()
+            .filter(dev -> !dev.isSelected())
+            .collect(Collectors.toList());
   }
 
   public void selectFlowers(List<String> ids) {
