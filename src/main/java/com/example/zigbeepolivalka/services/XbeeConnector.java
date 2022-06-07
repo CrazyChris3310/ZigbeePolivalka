@@ -16,6 +16,10 @@ import java.util.List;
 @Component
 public class XbeeConnector {
 
+  public static final byte MODE_ID = 1;
+  public static final byte MODE_PARAM = 2;
+  public static final byte WATER_AMOUNT = 3;
+
   private static final Logger log = LoggerFactory.getLogger(XbeeConnector.class);
 
   private XBeeDevice localDevice;
@@ -23,22 +27,21 @@ public class XbeeConnector {
   public XbeeConnector(@Value("${local.xbee.device.port}") String port,
                        @Value("${local.xbee.device.baudrate}") int baudRate) {
     localDevice = new XBeeDevice(port, baudRate);
-  }
-
-  public void setFlowers(List<Flower> flowers) {
     try {
       localDevice.open();
-      localDevice.addDataListener(new DataReceiverListener(flowers));
     } catch (XBeeException e) {
       System.out.println("Error opening connection. " + e.getMessage());
     }
   }
 
-  public List<RemoteXBeeDevice> discoverNetwork() throws XBeeException {
+  public void setFlowers(List<Flower> flowers) {
+    localDevice.addDataListener(new DataReceiverListener(flowers));
+  }
+
+  public List<RemoteXBeeDevice> discoverNetwork() {
     LoggerFactory.getLogger(XbeeConnector.class);
     List<RemoteXBeeDevice> network;
     XBeeNetwork net = localDevice.getNetwork();
-    net.setDiscoveryTimeout(3000);
     net.startDiscoveryProcess();
     while (net.isDiscoveryRunning()) {
       try {
@@ -53,8 +56,8 @@ public class XbeeConnector {
     return network;
   }
 
-  public void sendData(RemoteXBeeDevice remote, byte modeId, short modeParameter) throws XBeeException {
-    byte[] data = ByteBuffer.allocate(3).put(modeId).putShort(modeParameter).array();
+  public void sendData(RemoteXBeeDevice remote, byte command, short parameter) throws XBeeException {
+    byte[] data = ByteBuffer.allocate(3).put(command).putShort(parameter).array();
     localDevice.sendData(remote, data);
   }
 }

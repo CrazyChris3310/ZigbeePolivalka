@@ -26,10 +26,12 @@ public class DataReceiverListener implements IDataReceiveListener {
       return;
     }
     ByteBuffer buf = ByteBuffer.wrap(xBeeMessage.getData());
-    byte data = buf.get();
-    fl.setCurrentMoistureLevel(data);
-    System.out.format("From %s >> %s | %s%n", xBeeMessage.getDevice().get64BitAddress(),
-                      HexUtils.prettyHexString(HexUtils.byteArrayToHexString(xBeeMessage.getData())),
-                      new String(xBeeMessage.getData()));
+    byte mode = buf.get();
+    if (mode == 101 || mode == 102) {
+      short data = buf.getShort();
+      fl.setCurrentMoistureLevel(data);
+      System.out.format("From %s >> %s | %s%n", xBeeMessage.getDevice().get64BitAddress(),
+                        data, new String(xBeeMessage.getData()));
+    }
   }
 }

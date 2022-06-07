@@ -42,8 +42,12 @@ public class ZigBeeService {
 
     oldFlower.setName(newFlower.getName());
     oldFlower.setWateringMode(newFlower.getWateringMode());
+
     connector.sendData(oldFlower.getRemoteXBeeDevice(),
-                       oldFlower.getWateringMode().getModeId(),
+                       XbeeConnector.MODE_ID,
+                       oldFlower.getWateringMode().getModeParameter().shortValue());
+    connector.sendData(oldFlower.getRemoteXBeeDevice(),
+                       XbeeConnector.MODE_PARAM,
                        oldFlower.getWateringMode().getModeParameter().shortValue());
   }
 
