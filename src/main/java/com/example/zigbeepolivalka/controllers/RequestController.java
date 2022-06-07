@@ -73,7 +73,7 @@ public class RequestController {
     }
 
     @PostMapping("/save")
-    public String saveNewFlowers(@RequestBody(required = false) Map<String, String> body, Model model){
+    public String saveNewFlowers(@RequestParam(required = false) Map<String, String> body, Model model){
         System.out.println(body);
         service.selectFlowers(body.keySet());
         return flowerList(model);

@@ -41,7 +41,7 @@
                     Choose moisture level
                     <select class="form-select-field" required id="level" name="levels">
                         <#list 0..9 as i>
-                            <#if flower.getWateringMode().getDuration() == i*10>
+                            <#if flower.getWateringMode().getModeParameter() == i*10>
                                 <option selected>${i*10}</option>
                             <#else>
                                 <option>${i*10}</option>
@@ -97,7 +97,7 @@
                 <label for="time">
                     <select class="form-select-field" required id="days" name="days">
                         <#list 0..30 as days>
-                            <#if flower.getWateringMode().getModeParameter() % (24 * 60) == days>
+                            <#if flower.getWateringMode().getModeParameter() / 60 / 24 == days>
                                 <option selected>${days}</option>
                             <#else>
                                 <option>${days}</option>
@@ -107,7 +107,7 @@
                     Days
                     <select class="form-select-field" required id="hours" name="hours">
                         <#list 0..24 as hours>
-                            <#if flower.getWateringMode().getModeParameter() / 60 / 24 == hours>
+                            <#if flower.getWateringMode().getModeParameter() / 60 % 24 == hours>
                                 <option selected>${hours}</option>
                             <#else>
                                 <option>${hours}</option>

@@ -63,7 +63,7 @@ public class ZigBeeService {
     List<Flower> available = devices.stream()
             .map(Flower::new)
             .collect(Collectors.toList());
-    available.retainAll(this.flowers);
+    available.removeAll(this.flowers);
     flowers.addAll(available);
     return flowers.stream()
             .filter(dev -> !dev.isSelected())

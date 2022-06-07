@@ -27,7 +27,9 @@ public class Flower {
   public Flower(RemoteXBeeDevice device) {
     this.remoteXBeeDevice = device;
     this.id = remoteXBeeDevice.get64BitAddress().toString();
+    this.name = this.id;
     this.isSelected = false;
+    this.wateringMode = new MoistureMode(0);
   }
 
   public String getId() {
