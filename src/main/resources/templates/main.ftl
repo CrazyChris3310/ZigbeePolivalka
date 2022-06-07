@@ -1,14 +1,15 @@
-<#import "parts/common.ftl" as com>
+<#import "common.ftl" as com>
 
 <@com.page>
-    <div>Polivalka</div>
+    <h2>POLIVALKA</h2>
     <table>
         <#list flowerList as flower>
             <tr>
-                <td>${flower.getName()}</td>
-                <td>${flower.getCurrentMoistureLevel()}</td>
-                <td><a href="/flowers/${flower.getId()}">Edit</a></td>
+                <td class="flowers-names" style="width: 75%">${flower.getName()}</td>
+                <td class="flowers-characteristics" style="width: 7%">${flower.getCurrentMoistureLevel()}%</td>
+                <td class="flowers-characteristics" style="width: 18%"><a href="/${flower.getId()}">EDIT</a></td>
             </tr>
         </#list>
     </table>
+    <a href="/search">ADD NEW FLOWERS</a>
 </@com.page>

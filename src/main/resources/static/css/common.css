@@ -1,0 +1,46 @@
+body{
+    height: 100vh;
+    background-color: #F5E0B7;
+    font-family: "Rubik", "Tahoma", "Arial", sans-serif;
+    font-size: 20pt;
+    display: grid;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+h1, h2, h3, h4, h5, h6{
+    text-align: center;
+}
+
+
+.flowers-names {
+    border: 3px solid black;
+}
+
+.flowers-characteristics {
+    text-align: center;
+}
+
+a {
+    max-width: 260px;
+    padding: 2px 5px;
+    color: #000000;
+    margin-left: auto;
+    margin-right: auto;
+    transition: color .2s linear;
+}
+a:link {
+    color: #000000;
+    text-decoration: none;
+    padding: 2px 5px;
+}
+
+a:hover {
+    color: white;
+    background-color: #785589;
+    text-decoration: none;
+    border-radius: 9px;
+    box-shadow: 0 0 5px #785589;
+}

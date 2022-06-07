@@ -1,5 +1,6 @@
 package com.example.zigbeepolivalka.controllers;
 
+import com.digi.xbee.api.exceptions.XBeeException;
 import com.example.zigbeepolivalka.domain.Flower;
 import com.example.zigbeepolivalka.domain.MoistureMode;
 import com.example.zigbeepolivalka.domain.TimeMode;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,18 +23,6 @@ public class RequestController {
 
     @GetMapping("/")
     public String start(Model model){
-        //TODO Убрать строки добавления цветков
-//        MoistureMode mode = new MoistureMode();
-//        mode.setDuration(50);
-//        Flower rose = new Flower("Rose", mode);
-//        rose.setId(1);
-//        Flower sunflower = new Flower("SunFlower", new TimeMode());
-//        sunflower.setId(2);
-//        Flower butterCup = new Flower("ButterCup", new MoistureMode());
-//        butterCup.setId(3);
-//        service.addFlower(rose);
-//        service.addFlower(sunflower);
-//        service.addFlower(butterCup);
         return "start";
     }
 
@@ -44,46 +32,50 @@ public class RequestController {
         return "main";
     }
 
-    @GetMapping("/flowers/{id}")
+    @GetMapping("/{id}")
     public String getCurrentFlower(Model model, @PathVariable String id){
         try {
             model.addAttribute("flower", service.getFlowerById(id));
-            return "/parts/settings";
+            return "settings";
         } catch (NoSuchFlowerException exception) {
-            return "/parts/error";
+            return "error";
         }
     }
 
-    @PostMapping("/flowers/{id}")
-    public String updateCurrentFlower(@RequestParam String body, Model model, @PathVariable String id){
-        Map<String, String> parsedBody = bodyToMap(body);
+    @PostMapping("/{id}")
+    public String updateCurrentFlower(@RequestParam Map<String, String> body, Model model, @PathVariable String id){
         System.out.println(body);
         try {
-            if (Objects.equals(parsedBody.get("watering_mode"), "1")) {
+            if (Objects.equals(body.get("watering_mode"), "1")) {
                 MoistureMode mode = new MoistureMode();
-                mode.setModeParameter(Integer.parseInt(parsedBody.get("levels")));
-                service.updateFlower(id, new Flower(parsedBody.get("name"), mode));
+                mode.setModeParameter(Integer.parseInt(body.get("levels")));
+                service.updateFlower(id, new Flower(body.get("name"), mode));
             } else {
                 TimeMode mode = new TimeMode();
-                int time = Integer.parseInt(parsedBody.get("days")) * 3600 * 24 + Integer.parseInt(parsedBody.get("hours")) * 3600 + Integer.parseInt(parsedBody.get("min")) * 60;
+                int time = Integer.parseInt(body.get("days")) * 60 * 24 + Integer.parseInt(body.get("hours")) * 60 + Integer.parseInt(body.get("min"));
                 mode.setModeParameter(time);
-                service.updateFlower(id, new Flower(parsedBody.get("name"), mode));
+                service.updateFlower(id, new Flower(body.get("name"), mode));
             }
         } catch (NoSuchFlowerException exception){
-            return "/parts/error";
+            return "error";
         }
         return flowerList(model);
     }
 
-    public Map<String, String> bodyToMap (String body) {
-        Map<String, String> result = new HashMap<>();
-        String[] values = body.split("&");
-        for (String value : values) {
-            String[] pair = value.split("=");
-            if (pair.length == 2) {
-                result.put(pair[0], pair[1]);
-            }
+    @GetMapping("/search")
+    public String findNewFlowers(Model model){
+        try {
+            model.addAttribute("findFlowers", service.getAvailableFlowers());
+        } catch (XBeeException e) {
+            System.out.println("BRUH");
         }
-        return result;
+        return "search";
+    }
+
+    @PostMapping("/save")
+    public String saveNewFlowers(@RequestBody(required = false) Map<String, String> body, Model model){
+        System.out.println(body);
+        service.selectFlowers(body.keySet());
+        return flowerList(model);
     }
 }

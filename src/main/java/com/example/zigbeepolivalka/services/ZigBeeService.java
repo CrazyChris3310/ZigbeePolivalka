@@ -7,6 +7,7 @@ import com.example.zigbeepolivalka.exceptions.NoSuchFlowerException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,6 @@ public class ZigBeeService {
   // TODO: Exception handling must happen here, return status should be discussed
   public List<Flower> getAvailableFlowers() throws XBeeException {
     List<RemoteXBeeDevice> devices = connector.discoverNetwork();
-
     List<Flower> available = devices.stream()
             .map(Flower::new)
             .collect(Collectors.toList());
@@ -60,9 +60,9 @@ public class ZigBeeService {
     return available;
   }
 
-  public void selectFlowers(List<String> ids) {
+  public void selectFlowers(Collection<String> ids){
     for (Flower flower: flowers) {
-      if (ids.contains(flower.getId())) {
+      if (ids.contains(String.valueOf(flower.getId()))) {
         flower.setSelected(true);
       }
     }

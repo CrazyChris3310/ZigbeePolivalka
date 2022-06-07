@@ -1,0 +1,42 @@
+.form-submit-reset-button {
+    color: #000000;
+    font-size: 20pt;
+    text-decoration: none;
+    padding: 2px 5px;
+    background-color: #F5E0B7;
+    border: none;
+
+    transition: color .2s linear;
+}
+
+.form-submit-reset-button:hover{
+    color: white;
+    font-size: 20pt;
+    background-color: #785589;
+    text-decoration: none;
+    border-radius: 9px;
+    box-shadow: 0 0 5px #785589;
+}
+
+.form-checkbox-button{
+    width: 30px;
+    height: 30px;
+}
+
+.form-radio-button{
+    width: 20px;
+    height: 20px;
+}
+
+.form-input-field{
+    height: 30px;
+}
+
+.form-select-field{
+    height: 30px;
+    width: 50px;
+}
+
+.form-buttons-container{
+    text-align: center;
+}
