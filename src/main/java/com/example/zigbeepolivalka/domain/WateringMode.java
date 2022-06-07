@@ -2,7 +2,7 @@ package com.example.zigbeepolivalka.domain;
 
 public interface WateringMode {
 
-  int getModeId();
+  byte getModeId();
 
   Integer getModeParameter();
 

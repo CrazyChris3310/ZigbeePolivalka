@@ -12,7 +12,7 @@ public class TimeMode extends AbstractMode {
   }
 
   @Override
-  public int getModeId() {
+  public byte getModeId() {
     return 2;
   }
 

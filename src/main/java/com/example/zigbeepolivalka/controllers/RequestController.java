@@ -56,7 +56,7 @@ public class RequestController {
                 mode.setModeParameter(time);
                 service.updateFlower(id, new Flower(body.get("name"), mode));
             }
-        } catch (NoSuchFlowerException exception){
+        } catch (NoSuchFlowerException | XBeeException exception){
             return "error";
         }
         return flowerList(model);

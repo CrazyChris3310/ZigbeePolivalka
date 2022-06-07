@@ -66,6 +66,14 @@ public class Flower {
     isSelected = selected;
   }
 
+  public RemoteXBeeDevice getRemoteXBeeDevice() {
+    return remoteXBeeDevice;
+  }
+
+  public void setRemoteXBeeDevice(RemoteXBeeDevice remoteXBeeDevice) {
+    this.remoteXBeeDevice = remoteXBeeDevice;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) { return true; }
