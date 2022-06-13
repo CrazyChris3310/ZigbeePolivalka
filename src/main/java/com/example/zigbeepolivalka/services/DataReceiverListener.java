@@ -2,7 +2,6 @@ package com.example.zigbeepolivalka.services;
 
 import com.digi.xbee.api.listeners.IDataReceiveListener;
 import com.digi.xbee.api.models.XBeeMessage;
-import com.digi.xbee.api.utils.HexUtils;
 import com.example.zigbeepolivalka.domain.Flower;
 
 import java.nio.ByteBuffer;

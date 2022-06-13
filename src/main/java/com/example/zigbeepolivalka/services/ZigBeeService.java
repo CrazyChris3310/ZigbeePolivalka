@@ -13,8 +13,11 @@ import java.util.stream.Collectors;
 
 import static com.example.zigbeepolivalka.services.XbeeConnector.MOISTURE_THRESHOLD_PARAM;
 import static com.example.zigbeepolivalka.services.XbeeConnector.WATERING_TIME_PARAM;
-import static com.example.zigbeepolivalka.services.XbeeConnector.WATER_AMOUNT;
+import static com.example.zigbeepolivalka.services.XbeeConnector.VALVE_OPEN_TIME;
 
+/**
+ * {@code ZigBeeService} provides methods for CRUD operations with flowers.
+ */
 @Service
 public class ZigBeeService {
 
@@ -23,17 +26,28 @@ public class ZigBeeService {
 
   private List<Flower> flowers = new ArrayList<>();
 
+  /**
+   * Creates {@code ZigBeeService} with a given {@link XbeeConnector}.
+   */
   public ZigBeeService(XbeeConnector connector) {
     this.connector = connector;
     this.connector.setFlowers(flowers);
   }
 
+  /**
+   * Method returns all tracked flowers, i.e. they are selected to be tracked.
+   * @return list of tracked flowers
+   */
   public List<Flower> getFlowers() {
     return flowers.stream()
             .filter(Flower::isSelected)
             .collect(Collectors.toList());
   }
 
+  /**
+   * Method returns flower with given id
+   * @throws NoSuchFlowerException if flower with such id does not exist
+   */
   public Flower getFlowerById(String id) throws NoSuchFlowerException {
     return flowers.stream()
             .filter(flower -> flower.getId().equals(id))
@@ -41,6 +55,13 @@ public class ZigBeeService {
             .orElseThrow(NoSuchFlowerException::new);
   }
 
+  /**
+   * Method updates parameters like watering mode or mode on existing flower.
+   * @param id identifier of a flower to be updated
+   * @param newFlower flower with new data that should be written to updating flower
+   * @throws NoSuchFlowerException if flower with such id does not exist
+   * @throws XBeeException if problems with sending data to remote device happened.
+   */
   public void updateFlower(String id, Flower newFlower) throws NoSuchFlowerException,
           XBeeException {
     Flower oldFlower = getFlowerById(id);
@@ -63,10 +84,16 @@ public class ZigBeeService {
                          oldFlower.getWateringMode().getModeParameter().shortValue());
     }
     connector.sendData(oldFlower.getRemoteXBeeDevice(),
-                       WATER_AMOUNT,
+                       VALVE_OPEN_TIME,
                        oldFlower.getValveOpenTime());
   }
 
+  /**
+   * Method removes flower with given id from tracked state.
+   * @param id identifier of a removing flower
+   * @throws NoSuchFlowerException if flower with such id does not exist
+   * @throws XBeeException if connection problems happened
+   */
   public void removeFlower(String id) throws NoSuchFlowerException, XBeeException {
     Flower toRemove = getFlowerById(id);
     flowers.remove(toRemove);
@@ -74,6 +101,13 @@ public class ZigBeeService {
   }
 
   // TODO: Exception handling must happen here, return status should be discussed
+
+  /**
+   * Method return all untracked flowers connected to the same zigbee network.
+   * If new flowers were added to the network they will be included to the returned list.
+   * @return flowers which aren't tracked yet
+   * @throws XBeeException if network scan fails
+   */
   public List<Flower> getAvailableFlowers() throws XBeeException {
     List<RemoteXBeeDevice> devices = connector.discoverNetwork();
     List<Flower> available = devices.stream()
@@ -86,6 +120,10 @@ public class ZigBeeService {
             .collect(Collectors.toList());
   }
 
+  /**
+   * Method selects flowers with given ids to be tracked.
+   * @param ids identifiers of flowers to be tracked
+   */
   public void selectFlowers(Collection<String> ids){
     for (Flower flower: flowers) {
       if (ids.contains(String.valueOf(flower.getId()))) {
