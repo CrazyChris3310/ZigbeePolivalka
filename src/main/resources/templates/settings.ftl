@@ -128,6 +128,17 @@
                 </label>
             </div>
         </#if>
+        <div>
+            <label for="valve-open-time">Valve open time: </label>
+            <select required id="valve-open-time" name="valve_open_time">
+                <option value="2">2</option>
+                <#list 5..30 as val>
+                    <#if (val)%5 == 0>
+                        <option value="${val}">${val}</option>
+                    </#if>
+                </#list>
+            </select>
+        </div>
         <div class="form-buttons-container">
             <input class="form-submit-reset-button" type="submit" value="Submit">
             <input class="form-submit-reset-button" type="reset" value="Reset">

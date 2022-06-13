@@ -1,15 +1,20 @@
 package com.example.zigbeepolivalka.controllers;
 
 import com.digi.xbee.api.exceptions.XBeeException;
+import com.example.zigbeepolivalka.domain.AbstractMode;
 import com.example.zigbeepolivalka.domain.Flower;
 import com.example.zigbeepolivalka.domain.MoistureMode;
 import com.example.zigbeepolivalka.domain.TimeMode;
+import com.example.zigbeepolivalka.domain.WateringMode;
 import com.example.zigbeepolivalka.exceptions.NoSuchFlowerException;
 import com.example.zigbeepolivalka.services.ZigBeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 import java.util.Objects;
@@ -43,23 +48,27 @@ public class RequestController {
     }
 
     @PostMapping("/{id}")
-    public String updateCurrentFlower(@RequestParam Map<String, String> body, Model model, @PathVariable String id){
+    public String updateCurrentFlower(@RequestParam Map<String, String> body, @PathVariable String id){
         System.out.println(body);
         try {
+            WateringMode mode;
             if (Objects.equals(body.get("watering_mode"), "1")) {
-                MoistureMode mode = new MoistureMode();
+                mode = new MoistureMode();
                 mode.setModeParameter(Integer.parseInt(body.get("levels")));
-                service.updateFlower(id, new Flower(body.get("name"), mode));
             } else {
-                TimeMode mode = new TimeMode();
-                int time = Integer.parseInt(body.get("days")) * 60 * 24 + Integer.parseInt(body.get("hours")) * 60 + Integer.parseInt(body.get("min"));
+                mode = new TimeMode();
+                int time = Integer.parseInt(body.get("days")) * 60 * 24 +
+                           Integer.parseInt(body.get("hours")) * 60 +
+                           Integer.parseInt(body.get("min"));
                 mode.setModeParameter(time);
-                service.updateFlower(id, new Flower(body.get("name"), mode));
             }
+            Flower newFlower = new Flower(body.get("name"), mode);
+            newFlower.setValveOpenTime(Byte.parseByte(body.get("valve_open_time")));
+            service.updateFlower(id, newFlower);
         } catch (NoSuchFlowerException | XBeeException exception){
             return "error";
         }
-        return flowerList(model);
+        return "redirect:/flowers";
     }
 
     @GetMapping("/search")

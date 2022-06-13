@@ -27,9 +27,9 @@ public class DataReceiverListener implements IDataReceiveListener {
     }
     ByteBuffer buf = ByteBuffer.wrap(xBeeMessage.getData());
     byte mode = buf.get();
-    if (mode == 101 || mode == 102) {
+    if (mode == 101) {
       short data = buf.getShort();
-      fl.setCurrentMoistureLevel(data);
+      fl.setCurrentMoistureLevel((int)((data / 1024.0) * 100));
       System.out.format("From %s >> %s | %s%n", xBeeMessage.getDevice().get64BitAddress(),
                         data, new String(xBeeMessage.getData()));
     }

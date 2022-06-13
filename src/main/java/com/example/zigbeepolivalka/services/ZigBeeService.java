@@ -11,9 +11,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.zigbeepolivalka.services.XbeeConnector.MOISTURE_THRESHOLD_PARAM;
+import static com.example.zigbeepolivalka.services.XbeeConnector.WATERING_TIME_PARAM;
+import static com.example.zigbeepolivalka.services.XbeeConnector.WATER_AMOUNT;
+
 @Service
 public class ZigBeeService {
 
+  // TODO: if the device is powered off, it should be removed from flowers list
   private final XbeeConnector connector;
 
   private List<Flower> flowers = new ArrayList<>();
@@ -45,10 +50,21 @@ public class ZigBeeService {
 
     connector.sendData(oldFlower.getRemoteXBeeDevice(),
                        XbeeConnector.MODE_ID,
-                       oldFlower.getWateringMode().getModeParameter().shortValue());
+                       oldFlower.getWateringMode().getModeId());
+
+    if (oldFlower.getWateringMode().getModeId() == 1) {
+      connector.sendData(oldFlower.getRemoteXBeeDevice(),
+                         MOISTURE_THRESHOLD_PARAM,
+                         (short)(oldFlower.getWateringMode().getModeParameter().shortValue()
+                                 * 1024 / 100));
+    } else {
+      connector.sendData(oldFlower.getRemoteXBeeDevice(),
+                         WATERING_TIME_PARAM,
+                         oldFlower.getWateringMode().getModeParameter().shortValue());
+    }
     connector.sendData(oldFlower.getRemoteXBeeDevice(),
-                       XbeeConnector.MODE_PARAM,
-                       oldFlower.getWateringMode().getModeParameter().shortValue());
+                       WATER_AMOUNT,
+                       oldFlower.getValveOpenTime());
   }
 
   public void removeFlower(String id) throws NoSuchFlowerException, XBeeException {

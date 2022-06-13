@@ -8,20 +8,23 @@ public class Flower {
 
   private String id;
   private String name;
-  private AbstractMode wateringMode;
+  private WateringMode wateringMode;
   private int currentMoistureLevel;
   private RemoteXBeeDevice remoteXBeeDevice;
   private boolean isSelected;
+  private byte valveOpenTime;
 
-  public Flower(String name, AbstractMode wateringMode) {
+  public Flower(String name, WateringMode wateringMode) {
     this.name = name;
     this.wateringMode = wateringMode;
+    this.valveOpenTime = 5;
   }
 
-  public Flower(String id, String name, AbstractMode wateringMode) {
+  public Flower(String id, String name, WateringMode wateringMode) {
     this.id = id;
     this.name = name;
     this.wateringMode = wateringMode;
+    this.valveOpenTime = 5;
   }
 
   public Flower(RemoteXBeeDevice device) {
@@ -30,6 +33,7 @@ public class Flower {
     this.name = this.id;
     this.isSelected = false;
     this.wateringMode = new MoistureMode(0);
+    this.valveOpenTime = 5;
   }
 
   public String getId() {
@@ -44,11 +48,11 @@ public class Flower {
     this.name = name;
   }
 
-  public AbstractMode getWateringMode() {
+  public WateringMode getWateringMode() {
     return wateringMode;
   }
 
-  public void setWateringMode(AbstractMode wateringMode) {
+  public void setWateringMode(WateringMode wateringMode) {
     this.wateringMode = wateringMode;
   }
 
@@ -74,6 +78,14 @@ public class Flower {
 
   public void setRemoteXBeeDevice(RemoteXBeeDevice remoteXBeeDevice) {
     this.remoteXBeeDevice = remoteXBeeDevice;
+  }
+
+  public byte getValveOpenTime() {
+    return valveOpenTime;
+  }
+
+  public void setValveOpenTime(byte valveOpenTime) {
+    this.valveOpenTime = valveOpenTime;
   }
 
   @Override

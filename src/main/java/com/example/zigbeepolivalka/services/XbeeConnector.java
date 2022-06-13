@@ -17,8 +17,9 @@ import java.util.List;
 public class XbeeConnector {
 
   public static final byte MODE_ID = 1;
-  public static final byte MODE_PARAM = 2;
-  public static final byte WATER_AMOUNT = 3;
+  public static final byte WATERING_TIME_PARAM = 2;
+  public static final byte MOISTURE_THRESHOLD_PARAM = 3;
+  public static final byte WATER_AMOUNT = 4;
 
   private static final Logger log = LoggerFactory.getLogger(XbeeConnector.class);
 
