@@ -15,7 +15,7 @@
             </table>
             <div class="form-buttons-container">
                 <input class="form-submit-reset-button" type="submit" value="Save">
-                <input class="form-submit-reset-button" type="reset" value="Reset">
+                <input class="form-submit-reset-button" type="button" value="Update" onclick="window.location.reload()">
             </div>
         </form>
     <a href="/flowers">BACK TO MAIN PAGE</a>

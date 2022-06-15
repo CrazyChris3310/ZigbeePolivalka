@@ -43,29 +43,30 @@ public class RequestController {
             model.addAttribute("flower", service.getFlowerById(id));
             return "settings";
         } catch (NoSuchFlowerException exception) {
+            model.addAttribute("message", "Chosen flower isn't find. Please, try again");
             return "error";
         }
     }
 
     @PostMapping("/{id}")
-    public String updateCurrentFlower(@RequestParam Map<String, String> body, @PathVariable String id){
-        System.out.println(body);
+    public String updateCurrentFlower(@RequestParam int watering_mode, @RequestParam int levels, @RequestParam int days, @RequestParam int hours, @RequestParam int min, @RequestParam String name, @RequestParam byte valve_open_time, @PathVariable String id, Model model){
         try {
             WateringMode mode;
-            if (Objects.equals(body.get("watering_mode"), "1")) {
+            if (watering_mode == 1) {
                 mode = new MoistureMode();
-                mode.setModeParameter(Integer.parseInt(body.get("levels")));
+                mode.setModeParameter(levels);
             } else {
                 mode = new TimeMode();
-                int time = Integer.parseInt(body.get("days")) * 60 * 24 +
-                           Integer.parseInt(body.get("hours")) * 60 +
-                           Integer.parseInt(body.get("min"));
+                int time = days * 60 * 24 +
+                           hours * 60 +
+                           min;
                 mode.setModeParameter(time);
             }
-            Flower newFlower = new Flower(body.get("name"), mode);
-            newFlower.setValveOpenTime(Byte.parseByte(body.get("valve_open_time")));
+            Flower newFlower = new Flower(name, mode);
+            newFlower.setValveOpenTime(valve_open_time);
             service.updateFlower(id, newFlower);
         } catch (NoSuchFlowerException | XBeeException exception){
+            model.addAttribute("message", "Chosen flower isn't find or XBee has troubles with connection. Please, try again");
             return "error";
         }
         return "redirect:/flowers";
@@ -76,7 +77,8 @@ public class RequestController {
         try {
             model.addAttribute("findFlowers", service.getAvailableFlowers());
         } catch (XBeeException e) {
-            System.out.println("BRUH");
+            model.addAttribute("message", "XBee has troubles with connection. Please, try again");
+            return "error";
         }
         return "search";
     }
