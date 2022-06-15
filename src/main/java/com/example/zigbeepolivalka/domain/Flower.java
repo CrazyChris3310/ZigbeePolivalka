@@ -11,13 +11,13 @@ import java.util.Objects;
  * Each flower may be tracked by program, which means it will dynamically update it's data
  * and corresponding XbeeDevice can be managed by it.
  */
-public class Flower implements Serializable {
+public class Flower {
 
   private String id;
   private String name;
   private WateringMode wateringMode;
   private int currentMoistureLevel;
-  transient private RemoteXBeeDevice remoteXBeeDevice;
+  private RemoteXBeeDevice remoteXBeeDevice;
   private boolean isSelected;
   private byte valveOpenTime;
 

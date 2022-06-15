@@ -39,23 +39,8 @@ public class ZigBeeService {
    */
   public ZigBeeService(XbeeConnector connector) throws IOException, ClassNotFoundException {
     this.connector = connector;
-    readFromFile();
     this.connector.setFlowers(flowers);
     this.lock = new ReentrantLock();
-  }
-
-  private void readFromFile() throws IOException, ClassNotFoundException {
-    FileInputStream fis = new FileInputStream("flower_data");
-    ObjectInputStream ois = new ObjectInputStream(fis);
-    this.flowers = (List<Flower>) ois.readObject();
-  }
-
-  @PreDestroy
-  public void saveDataOfFlowers() throws IOException {
-    FileOutputStream fos = new FileOutputStream("flower_data");
-    ObjectOutputStream oos = new ObjectOutputStream(fos);
-    oos.writeObject(flowers);
-    oos.flush();
   }
 
   /**
