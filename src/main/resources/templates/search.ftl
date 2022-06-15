@@ -14,7 +14,9 @@
                 </#list>
             </table>
             <div class="form-buttons-container">
-                <input class="form-submit-reset-button" type="submit" value="Save">
+                <#if findFlowers?has_content>
+                    <input class="form-submit-reset-button" type="submit" value="Save">
+                </#if>
                 <input class="form-submit-reset-button" type="button" value="Update" onclick="window.location.reload()">
             </div>
         </form>

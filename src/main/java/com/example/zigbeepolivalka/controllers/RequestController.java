@@ -56,7 +56,10 @@ public class RequestController {
                                       @RequestParam int min,
                                       @RequestParam String name,
                                       @RequestParam byte valve_open_time,
-                                      @PathVariable String id, Model model) {
+                                      @PathVariable String id,
+                                      Model model)
+    {
+        System.out.println(valve_open_time);
         try {
             WateringMode mode;
             if (watering_mode == 1) {

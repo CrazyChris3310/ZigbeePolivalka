@@ -13,6 +13,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import static com.example.zigbeepolivalka.services.XbeeConnector.MOISTURE_THRESHOLD_PARAM;
@@ -29,6 +31,8 @@ public class ZigBeeService {
   private final XbeeConnector connector;
 
   private List<Flower> flowers = new ArrayList<>();
+  private Lock lock;
+
 
   /**
    * Creates {@code ZigBeeService} with a given {@link XbeeConnector}.
@@ -37,6 +41,7 @@ public class ZigBeeService {
     this.connector = connector;
     readFromFile();
     this.connector.setFlowers(flowers);
+    this.lock = new ReentrantLock();
   }
 
   private void readFromFile() throws IOException, ClassNotFoundException {
@@ -87,6 +92,7 @@ public class ZigBeeService {
 
     oldFlower.setName(newFlower.getName());
     oldFlower.setWateringMode(newFlower.getWateringMode());
+    oldFlower.setValveOpenTime(newFlower.getValveOpenTime());
 
     connector.sendData(oldFlower.getRemoteXBeeDevice(),
                        XbeeConnector.MODE_ID,
@@ -133,10 +139,15 @@ public class ZigBeeService {
             .map(Flower::new)
             .collect(Collectors.toList());
     available.removeAll(this.flowers);
-    flowers.addAll(available);
-    return flowers.stream()
-            .filter(dev -> !dev.isSelected())
-            .collect(Collectors.toList());
+    lock.lock();
+    try {
+      flowers.addAll(available);
+      return flowers.stream()
+              .filter(dev -> !dev.isSelected())
+              .collect(Collectors.toList());
+    } finally {
+      lock.unlock();
+    }
   }
 
   /**

@@ -67,7 +67,10 @@ public class XbeeConnector {
     LoggerFactory.getLogger(XbeeConnector.class);
     List<RemoteXBeeDevice> network;
     XBeeNetwork net = localDevice.getNetwork();
-    net.startDiscoveryProcess();
+    try {
+      net.startDiscoveryProcess();
+      log.info("Started discovering network");
+    } catch (IllegalStateException ignored) {}
     while (net.isDiscoveryRunning()) {
       try {
         Thread.sleep(100);
@@ -75,7 +78,6 @@ public class XbeeConnector {
         break;
       }
     }
-    log.info("Started discovering network");
     network = net.getDevices();
 
     return network;

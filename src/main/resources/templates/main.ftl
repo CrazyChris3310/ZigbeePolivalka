@@ -10,6 +10,8 @@
                 <td class="flowers-characteristics" style="width: 15%"><a href="/${flower.getId()}">EDIT</a></td>
                 <td class="flowers-characteristics" style="width: 7%"><a href="/delete/${flower.getId()}">X</a></td>
             </tr>
+        <#else>
+            <div>There is no flowers there :( Please, use button below to add any.</div>
         </#list>
     </table>
     <a href="/search">ADD NEW FLOWERS</a>

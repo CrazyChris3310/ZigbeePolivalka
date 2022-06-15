@@ -133,7 +133,11 @@
                 <select required id="valve-open-time" name="valve_open_time">
                     <#list 5..30 as val>
                         <#if (val)%5 == 0>
-                            <option value="${val}">${val}</option>
+                            <#if flower.getValveOpenTime() == val>
+                                <option selected>${val}</option>
+                            <#else>
+                                <option>${val}</option>
+                            </#if>
                         </#if>
                     </#list>
                 </select>
