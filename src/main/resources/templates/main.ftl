@@ -1,18 +1,18 @@
 <#import "common.ftl" as com>
 
 <@com.page>
-    <h2>POLIVALKA</h2>
-    <table>
+    <div class="container">
+        <h2>POLIVALKA</h2>
         <#list flowerList as flower>
-            <tr>
-                <td class="flowers-names" style="width: 70%">${flower.getName()}</td>
-                <td class="flowers-characteristics" style="width: 7%">${flower.getCurrentMoistureLevel()}%</td>
-                <td class="flowers-characteristics" style="width: 15%"><a href="/${flower.getId()}">EDIT</a></td>
-                <td class="flowers-characteristics" style="width: 7%"><a href="/delete/${flower.getId()}">X</a></td>
-            </tr>
-        <#else>
-            <div>There is no flowers there :( Please, use button below to add any.</div>
+            <div class="row center-md center-sm">
+                <div class="col-md-5 col-sm-7 col-xs-9 end-xs">${flower.getName()}</div>
+                <div class="col-md-1 col-sm-3 col-xs-2 end-xs">${flower.getCurrentMoistureLevel()}%</div>
+                <div class="col-md-2 col-sm-4 col-xs-6 end-xs"><a href="/${flower.getId()}">EDIT</a></div>
+                <div class="col-md-2 col-sm-4 col-xs-6"><a href="/delete/${flower.getId()}">Remove</a></div>
+            </div>
         </#list>
-    </table>
-    <a href="/search">ADD NEW FLOWERS</a>
+        <div class="row center-md" >
+            <a href="/search">ADD NEW FLOWERS</a>
+        </div>
+    </div>
 </@com.page>
