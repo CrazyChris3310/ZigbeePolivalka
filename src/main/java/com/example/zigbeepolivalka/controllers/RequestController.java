@@ -11,10 +11,7 @@ import com.example.zigbeepolivalka.services.ZigBeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,8 +20,11 @@ import java.util.Objects;
 @Controller
 public class RequestController {
 
-    @Autowired
-    ZigBeeService service;
+    private final ZigBeeService service;
+
+    public RequestController(ZigBeeService service) {
+        this.service = service;
+    }
 
     @GetMapping("/")
     public String start(Model model){
@@ -49,7 +49,14 @@ public class RequestController {
     }
 
     @PostMapping("/{id}")
-    public String updateCurrentFlower(@RequestParam int watering_mode, @RequestParam int levels, @RequestParam int days, @RequestParam int hours, @RequestParam int min, @RequestParam String name, @RequestParam byte valve_open_time, @PathVariable String id, Model model){
+    public String updateCurrentFlower(@RequestParam int watering_mode,
+                                      @RequestParam int levels,
+                                      @RequestParam int days,
+                                      @RequestParam int hours,
+                                      @RequestParam int min,
+                                      @RequestParam String name,
+                                      @RequestParam byte valve_open_time,
+                                      @PathVariable String id, Model model) {
         try {
             WateringMode mode;
             if (watering_mode == 1) {
@@ -88,5 +95,16 @@ public class RequestController {
         System.out.println(body);
         service.selectFlowers(body.keySet());
         return flowerList(model);
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteFlower(@PathVariable String id, Model model) {
+        try {
+            service.removeFlower(id);
+        } catch (XBeeException | NoSuchFlowerException e) {
+            model.addAttribute("message", "Chosen flower isn't found or XBee has troubles with connection. Please, try again");
+            return "error";
+        }
+        return "redirect:/flowers";
     }
 }

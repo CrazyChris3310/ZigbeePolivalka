@@ -4,8 +4,12 @@ import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.example.zigbeepolivalka.domain.Flower;
 import com.example.zigbeepolivalka.exceptions.NoSuchFlowerException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PreDestroy;
+import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,9 +33,24 @@ public class ZigBeeService {
   /**
    * Creates {@code ZigBeeService} with a given {@link XbeeConnector}.
    */
-  public ZigBeeService(XbeeConnector connector) {
+  public ZigBeeService(XbeeConnector connector) throws IOException, ClassNotFoundException {
     this.connector = connector;
+    readFromFile();
     this.connector.setFlowers(flowers);
+  }
+
+  private void readFromFile() throws IOException, ClassNotFoundException {
+    FileInputStream fis = new FileInputStream("flower_data");
+    ObjectInputStream ois = new ObjectInputStream(fis);
+    this.flowers = (List<Flower>) ois.readObject();
+  }
+
+  @PreDestroy
+  public void saveDataOfFlowers() throws IOException {
+    FileOutputStream fos = new FileOutputStream("flower_data");
+    ObjectOutputStream oos = new ObjectOutputStream(fos);
+    oos.writeObject(flowers);
+    oos.flush();
   }
 
   /**

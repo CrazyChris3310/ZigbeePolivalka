@@ -1,5 +1,7 @@
 package com.example.zigbeepolivalka.domain;
 
+import java.io.Serializable;
+
 /**
  * Interface represents a mode of watering.
  * Each mode must manage only one property of a flower.

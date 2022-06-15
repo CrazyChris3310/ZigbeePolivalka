@@ -5,9 +5,10 @@
     <table>
         <#list flowerList as flower>
             <tr>
-                <td class="flowers-names" style="width: 75%">${flower.getName()}</td>
+                <td class="flowers-names" style="width: 70%">${flower.getName()}</td>
                 <td class="flowers-characteristics" style="width: 7%">${flower.getCurrentMoistureLevel()}%</td>
-                <td class="flowers-characteristics" style="width: 18%"><a href="/${flower.getId()}">EDIT</a></td>
+                <td class="flowers-characteristics" style="width: 15%"><a href="/${flower.getId()}">EDIT</a></td>
+                <td class="flowers-characteristics" style="width: 7%"><a href="/delete/${flower.getId()}">X</a></td>
             </tr>
         </#list>
     </table>
