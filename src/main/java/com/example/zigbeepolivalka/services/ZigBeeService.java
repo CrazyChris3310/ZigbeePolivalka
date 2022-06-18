@@ -37,10 +37,11 @@ public class ZigBeeService {
   /**
    * Creates {@code ZigBeeService} with a given {@link XbeeConnector}.
    */
-  public ZigBeeService(XbeeConnector connector) throws IOException, ClassNotFoundException {
-    this.connector = connector;
-    this.connector.setFlowers(flowers);
+  public ZigBeeService(XbeeConnector connector) {
     this.lock = new ReentrantLock();
+    this.connector = connector;
+    this.connector.setLock(lock);
+    this.connector.setFlowers(flowers);
   }
 
   /**

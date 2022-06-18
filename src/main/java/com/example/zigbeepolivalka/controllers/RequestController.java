@@ -94,10 +94,10 @@ public class RequestController {
     }
 
     @PostMapping("/save")
-    public String saveNewFlowers(@RequestParam(required = false) Map<String, String> body, Model model){
+    public String saveNewFlowers(@RequestParam(required = false) Map<String, String> body){
         System.out.println(body);
         service.selectFlowers(body.keySet());
-        return flowerList(model);
+        return "redirect:/flowers";
     }
 
     @GetMapping("/delete/{id}")

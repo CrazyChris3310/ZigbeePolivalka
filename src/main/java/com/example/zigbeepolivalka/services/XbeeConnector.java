@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Class is used to work with XbeeDevices, send data to them and scan zigbee network.
@@ -39,6 +40,7 @@ public class XbeeConnector {
   private static final Logger log = LoggerFactory.getLogger(XbeeConnector.class);
 
   private XBeeDevice localDevice;
+  private Lock lock;
 
   /**
    * Creates {@code XbeeConnector} with the local device connected to this PC.
@@ -57,6 +59,9 @@ public class XbeeConnector {
 
   public void setFlowers(List<Flower> flowers) {
     localDevice.addDataListener(new DataReceiverListener(flowers));
+    Thread th = new Thread(new XbeePinger(flowers, localDevice, lock));
+    th.setDaemon(true);
+    th.start();
   }
 
   /**
@@ -95,5 +100,9 @@ public class XbeeConnector {
     localDevice.sendData(remote, data);
     log.info("Parameter " + command + " with value " + parameter + " is set on device "
              + remote.get64BitAddress());
+  }
+
+  public void setLock(Lock lock) {
+    this.lock = lock;
   }
 }
