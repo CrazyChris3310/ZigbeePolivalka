@@ -1,6 +1,7 @@
 <#import "common.ftl" as com>
 
 <@com.page>
+    <div class="container">
     <h2>${flower.getName()}</h2>
     <div class="container">
         <form action = "/${flower.getId()}" method="post">
@@ -151,4 +152,5 @@
         </form>
     </div>
     <a href="/flowers">BACK TO MAIN PAGE</a>
+    </div>
 </@com.page>

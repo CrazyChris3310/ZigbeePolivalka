@@ -1,8 +1,13 @@
 body{
-    /*height: 100vh;*/
+    height: 100vh;
     background-color: #F5E0B7;
     font-family: "Rubik", "Tahoma", "Arial", sans-serif;
     font-size: 20pt;
+    display: grid;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
 }
 
 h1, h2, h3, h4, h5, h6{
@@ -66,4 +71,8 @@ a:hover {
     text-decoration: none;
     border-radius: 9px;
     box-shadow: 0 0 5px #785589;
+}
+
+.flower-line {
+    border: 3px solid black
 }
